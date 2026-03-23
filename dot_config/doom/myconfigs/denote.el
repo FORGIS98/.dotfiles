@@ -1,4 +1,4 @@
-;;; config-personal/denote.el -*- lexical-binding: t; -*-
+;;; myconfigs/denote.el -*- lexical-binding: t; -*-
 
 (use-package! denote
   :defer nil
@@ -8,8 +8,8 @@
 
   (setq denote-directory
         (if (string-prefix-p "ES99P4brP0pSx2I" (system-name))
-            (expand-file-name "~/mi-gemelo-digital/work")
-          (expand-file-name "~/mi-gemelo-digital/personal")))
+            (expand-file-name "~/mi-gemelo-digital/work/denote")
+          (expand-file-name "~/mi-gemelo-digital/personal/denote")))
 
   (denote-rename-buffer-mode 1)
 

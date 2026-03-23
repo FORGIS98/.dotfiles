@@ -2,14 +2,13 @@
 
 ;; Datos personales
 (setq user-full-name "Jorge Sol"
-      user-mail-address "jorgesolgonzalez@gmail.com")
+      user-mail-address "jorgesolgonzalez1998@gmail.com")
 
 ;; Config global
 (setq doom-theme 'doom-monokai-pro)
 (setq display-line-numbers-type 'relative)
 (setq frame-title-format "Emacs")
 (setq calendar-holidays nil)
-(beacon-mode 1)
 
 ;; Backups
 (setq create-lockfiles nil)
