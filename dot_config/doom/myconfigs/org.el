@@ -32,28 +32,6 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
       nil)))
 
 (setq org-agenda-custom-commands
-      '(("d" "Daily agenda and all TODOs"
-         ((tags "PRIORITY=\"A\""
-                ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
-                 (org-agenda-overriding-header "High Priority! DO-NOW:")))
-          (agenda ""
-                  ((org-agenda-span 3)
-                   (org-deadline-warning-days 0)
-                   (org-agenda-skip-deadline-prewarning-if-scheduled t)
-                   (org-agenda-start-day "0d")
-                   (org-agenda-prefix-format " %i %-25:c%?-12t% s")))
-          (alltodo ""
-                   ((org-agenda-skip-function (lambda ()
-                            (or (my/org-skip-subtree-if-habit)
-                                (my/org-skip-subtree-if-priority ?A)
-                                (my/org-skip-if-tag-yo)
-                                (org-agenda-skip-if nil '(scheduled deadline)))))
-                    (org-agenda-overriding-header "TODO-LIST:")
-                    (org-agenda-prefix-format " %i %-25:c"))))
-         ((org-agenda-compact-blocks nil)
-          (org-agenda-block-separator #x2500)))))
-
-(setq org-agenda-custom-commands
       '(;; ---------------------------------------------------------
         ;; SUB-MENÚ TRABAJO (tecla "w")
         ;; ---------------------------------------------------------
@@ -106,22 +84,10 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
          ((org-agenda-compact-blocks nil)
           (org-agenda-block-separator #x2500)))))
 
-
-
-
-
-
-
-
-
-
-
-
-
 (defun my/pop-to-org-agenda (&optional split)
   "Visit the org agenda, in the current window or a SPLIT."
   (interactive "P")
-  (org-agenda nil "d")
+  (org-agenda nil "wd")
   (when (not split)
     (delete-other-windows)))
 
@@ -143,7 +109,7 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
           ("w" "work")
           ("wt" "tasks" entry
            (file "work/todo.org")
-           "** TODO %?\n"
+           "* TODO %?\n"
            :prepend t)
           ("wm" "meeting" entry
            (file "work/meetings.org")
@@ -153,7 +119,7 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
           ("p" "personal")
           ("pt" "tasks" entry
            (file "personal/todo.org")
-           "** TODO %?\n"
+           "* TODO %?\n"
            :prepend t)
           ("pj" "diary" entry
            (file+datetree "personal/journal.org")
