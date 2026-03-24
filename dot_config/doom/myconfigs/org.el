@@ -31,13 +31,21 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
         (org-end-of-subtree t)
       nil)))
 
+(defun my/org-skip-subtree-if-not-habit ()
+  "Salta una entrada si NO es un hábito."
+  (let ((subtree-end (save-excursion (org-end-of-subtree t))))
+    (if (not (string= (org-entry-get nil "STYLE") "habit"))
+        subtree-end
+      nil)))
+
 (setq org-agenda-custom-commands
       '(;; ---------------------------------------------------------
-        ;; SUB-MENÚ TRABAJO (tecla "w")
+        ;; WORK "W"
         ;; ---------------------------------------------------------
-        ("w" . "Contexto: Trabajo") ; El punto indica que es un prefijo/título
 
-        ("wd" "Daily agenda and all TODOs"
+        ("w" . "work")
+
+        ("wd" "daily view"
          ((tags "PRIORITY=\"A\""
                 ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
                  (org-agenda-overriding-header "High Priority! DO-NOW:")))
@@ -49,21 +57,16 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
                    (org-agenda-prefix-format " %i %-25:c%?-12t% s")))
           (alltodo ""
                    ((org-agenda-skip-function (lambda ()
-                            (or (my/org-skip-subtree-if-habit)
-                                (my/org-skip-subtree-if-priority ?A)
-                                (my/org-skip-if-tag-yo)
-                                (org-agenda-skip-if nil '(scheduled deadline)))))
+                                                (or (my/org-skip-subtree-if-habit)
+                                                    (my/org-skip-subtree-if-priority ?A)
+                                                    (my/org-skip-if-tag-yo)
+                                                    (org-agenda-skip-if nil '(scheduled deadline)))))
                     (org-agenda-overriding-header "TODO-LIST:")
                     (org-agenda-prefix-format " %i %-25:c"))))
          ((org-agenda-compact-blocks nil)
           (org-agenda-block-separator #x2500)))
 
-        ;; ---------------------------------------------------------
-        ;; SUB-MENÚ PERSONAL (tecla "p")
-        ;; ---------------------------------------------------------
-        ("p" . "Contexto: Personal")
-
-        ("pd" "Daily agenda and all TODOs"
+        ("wt" "tmp"
          ((tags "PRIORITY=\"A\""
                 ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
                  (org-agenda-overriding-header "High Priority! DO-NOW:")))
@@ -75,19 +78,60 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
                    (org-agenda-prefix-format " %i %-25:c%?-12t% s")))
           (alltodo ""
                    ((org-agenda-skip-function (lambda ()
-                            (or (my/org-skip-subtree-if-habit)
-                                (my/org-skip-subtree-if-priority ?A)
-                                (my/org-skip-if-tag-yo)
-                                (org-agenda-skip-if nil '(scheduled deadline)))))
+                                                (or (my/org-skip-subtree-if-habit)
+                                                    (my/org-skip-subtree-if-priority ?A)
+                                                    (my/org-skip-if-tag-yo)
+                                                    (org-agenda-skip-if nil '(scheduled deadline)))))
                     (org-agenda-overriding-header "TODO-LIST:")
                     (org-agenda-prefix-format " %i %-25:c"))))
-         ((org-agenda-compact-blocks nil)
-          (org-agenda-block-separator #x2500)))))
+         ((org-agenda-files (list "~/mi-gemelo-digital/work/"
+                                  "~/mi-gemelo-digital/cumpleaños.org"
+                                  "~/mi-gemelo-digital/eventos-importantes.org"))
+          (org-agenda-compact-blocks nil)
+          (org-agenda-block-separator #x2500)))
+
+        ;; ---------------------------------------------------------
+        ;; PERSONAL "P"
+        ;; ---------------------------------------------------------
+
+        ("p" . "personal")
+
+        ("pd" "daily view"
+         ((tags "PRIORITY=\"A\""
+                ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
+                 (org-agenda-overriding-header "High Priority! DO-NOW:")))
+          (agenda ""
+                  ((org-agenda-span 3)
+                   (org-agenda-start-day "0d")
+                   (org-deadline-warning-days 0)
+                   (org-agenda-skip-deadline-prewarning-if-scheduled t)
+                   (org-agenda-prefix-format " %i %-25:c%?-12t% s")))
+          (alltodo ""
+                   ((org-agenda-skip-function (lambda ()
+                                                (or (my/org-skip-subtree-if-habit)
+                                                    (my/org-skip-subtree-if-priority ?A)
+                                                    (org-agenda-skip-if nil '(scheduled deadline)))))
+                    (org-agenda-overriding-header "TODO-LIST:")
+                    (org-agenda-prefix-format " %i %-25:c"))))
+         ((org-agenda-files (list "~/mi-gemelo-digital/personal/"
+                                  "~/mi-gemelo-digital/cumpleaños.org"
+                                  "~/mi-gemelo-digital/eventos-importantes.org"))
+          (org-agenda-compact-blocks nil)
+          (org-agenda-block-separator #x2500)))
+
+        ("ph" "Habits Timeline"
+         ((agenda ""
+                  ((org-agenda-span 3)
+                   (org-agenda-start-day "0d")
+                   (org-agenda-skip-function '(my/org-skip-subtree-if-not-habit))
+                   (org-agenda-overriding-header "Habit Consistency Chart:")))))))
 
 (defun my/pop-to-org-agenda (&optional split)
   "Visit the org agenda, in the current window or a SPLIT."
   (interactive "P")
-  (org-agenda nil "wd")
+  (if (string-prefix-p "ES99P4brP0pSx2I" (system-name))
+      (org-agenda nil "wd")
+    (org-agenda nil "pd"))
   (when (not split)
     (delete-other-windows)))
 
