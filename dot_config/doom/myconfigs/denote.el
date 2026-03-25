@@ -8,7 +8,7 @@
 
   (setq denote-directory
         (if (string-prefix-p "ES99P4brP0pSx2I" (system-name))
-            (expand-file-name "~/mi-gemelo-digital/work/denote")
+            (expand-file-name "~/mi-gemelo-digital/job/denote")
           (expand-file-name "~/mi-gemelo-digital/personal/denote")))
 
   (denote-rename-buffer-mode 1)
@@ -31,7 +31,7 @@
     (setq denote-silo-directories
           (list denote-directory
                 "~/mi-gemelo-digital/personal/"
-                "~/mi-gemelo-digital/work/"))
+                "~/mi-gemelo-digital/job/"))
   (map! :leader
         :prefix ("d" . "denote")
         (:prefix ("s" . "silo")

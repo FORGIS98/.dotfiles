@@ -40,12 +40,12 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
 
 (setq org-agenda-custom-commands
       '(;; ---------------------------------------------------------
-        ;; WORK "W"
+        ;; JOB "J"
         ;; ---------------------------------------------------------
 
-        ("w" . "work")
+        ("j" . "job")
 
-        ("wd" "daily view"
+        ("jd" "daily view"
          ((tags "PRIORITY=\"A\""
                 ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
                  (org-agenda-overriding-header "High Priority! DO-NOW:")))
@@ -56,37 +56,13 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
                    (org-agenda-start-day "0d")
                    (org-agenda-prefix-format " %i %-25:c%?-12t% s")))
           (alltodo ""
-                   ((org-agenda-skip-function (lambda ()
-                                                (or (my/org-skip-subtree-if-habit)
-                                                    (my/org-skip-subtree-if-priority ?A)
-                                                    (my/org-skip-if-tag-yo)
-                                                    (org-agenda-skip-if nil '(scheduled deadline)))))
+                   ((org-agenda-skip-if nil '(scheduled deadline))
                     (org-agenda-overriding-header "TODO-LIST:")
                     (org-agenda-prefix-format " %i %-25:c"))))
-         ((org-agenda-compact-blocks nil)
-          (org-agenda-block-separator #x2500)))
-
-        ("wt" "tmp"
-         ((tags "PRIORITY=\"A\""
-                ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
-                 (org-agenda-overriding-header "High Priority! DO-NOW:")))
-          (agenda ""
-                  ((org-agenda-span 3)
-                   (org-deadline-warning-days 0)
-                   (org-agenda-skip-deadline-prewarning-if-scheduled t)
-                   (org-agenda-start-day "0d")
-                   (org-agenda-prefix-format " %i %-25:c%?-12t% s")))
-          (alltodo ""
-                   ((org-agenda-skip-function (lambda ()
-                                                (or (my/org-skip-subtree-if-habit)
-                                                    (my/org-skip-subtree-if-priority ?A)
-                                                    (my/org-skip-if-tag-yo)
-                                                    (org-agenda-skip-if nil '(scheduled deadline)))))
-                    (org-agenda-overriding-header "TODO-LIST:")
-                    (org-agenda-prefix-format " %i %-25:c"))))
-         ((org-agenda-files (list "~/mi-gemelo-digital/work/"
-                                  "~/mi-gemelo-digital/cumpleaños.org"
-                                  "~/mi-gemelo-digital/eventos-importantes.org"))
+         ((org-agenda-files (append
+                             (directory-files-recursively "~/mi-gemelo-digital/job/" "\\.org$")
+                             (list "~/mi-gemelo-digital/cumpleaños.org"
+                                   "~/mi-gemelo-digital/eventos-importantes.org")))
           (org-agenda-compact-blocks nil)
           (org-agenda-block-separator #x2500)))
 
@@ -113,24 +89,32 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
                                                     (org-agenda-skip-if nil '(scheduled deadline)))))
                     (org-agenda-overriding-header "TODO-LIST:")
                     (org-agenda-prefix-format " %i %-25:c"))))
-         ((org-agenda-files (list "~/mi-gemelo-digital/personal/"
-                                  "~/mi-gemelo-digital/cumpleaños.org"
-                                  "~/mi-gemelo-digital/eventos-importantes.org"))
+         ((org-agenda-files (append
+                             (directory-files-recursively "~/mi-gemelo-digital/personal/" "\\.org$")
+                             (list "~/mi-gemelo-digital/cumpleaños.org"
+                                   "~/mi-gemelo-digital/eventos-importantes.org")))
           (org-agenda-compact-blocks nil)
           (org-agenda-block-separator #x2500)))
 
-        ("ph" "Habits Timeline"
+        ("ph" "habits"
          ((agenda ""
-                  ((org-agenda-span 3)
+                  ((org-agenda-span 5)
                    (org-agenda-start-day "0d")
-                   (org-agenda-skip-function '(my/org-skip-subtree-if-not-habit))
-                   (org-agenda-overriding-header "Habit Consistency Chart:")))))))
+                   (org-habit-show-habits t)
+                   (org-agenda-show-log nil)
+                   (org-habit-following-days 5)
+                   (org-habit-preceding-days 10)
+                   (org-habit-show-habits-only-for-today nil)
+                   (org-habit-graph-column 20)
+                   (org-agenda-skip-function
+                    '(org-agenda-skip-entry-if 'notregexp ":STYLE:.*habit")))))
+         ((org-agenda-files (list "~/mi-gemelo-digital/personal/habitos.org"))))))
 
 (defun my/pop-to-org-agenda (&optional split)
   "Visit the org agenda, in the current window or a SPLIT."
   (interactive "P")
   (if (string-prefix-p "ES99P4brP0pSx2I" (system-name))
-      (org-agenda nil "wd")
+      (org-agenda nil "jd")
     (org-agenda nil "pd"))
   (when (not split)
     (delete-other-windows)))
@@ -146,17 +130,26 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
 ;; log into LOGBOOK drawer
 (setq org-log-into-drawer t)
 
+(after! org-habit
+  :after org
+  :config
+  (setq org-habit-show-habits t
+        org-habit-following-days 5
+        org-habit-preceding-days 10
+        org-habit-show-habits-only-for-today nil
+        org-habit-graph-column 20))
+
 (after! org
   (setq org-start-on-weekday 1)
   (setq org-capture-templates
         '(;; --- Grupo de TRABAJO (tecla "w") ---
-          ("w" "work")
-          ("wt" "tasks" entry
-           (file "work/todo.org")
+          ("j" "job")
+          ("jt" "tasks" entry
+           (file "job/todo.org")
            "* TODO %?\n"
            :prepend t)
-          ("wm" "meeting" entry
-           (file "work/meetings.org")
+          ("jm" "meeting" entry
+           (file "job/meetings.org")
            "* REU %?")
 
           ;; --- Grupo PERSONAL (tecla "p") ---
