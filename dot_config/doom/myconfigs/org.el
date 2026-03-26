@@ -24,20 +24,6 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
         subtree-end
       nil)))
 
-(defun my/org-skip-if-tag-yo()
-  "Skip element if has tag :yo:"
-  (let ((tags (org-get-tags)))
-    (if (member "yo" tags)
-        (org-end-of-subtree t)
-      nil)))
-
-(defun my/org-skip-subtree-if-not-habit ()
-  "Salta una entrada si NO es un hábito."
-  (let ((subtree-end (save-excursion (org-end-of-subtree t))))
-    (if (not (string= (org-entry-get nil "STYLE") "habit"))
-        subtree-end
-      nil)))
-
 (setq org-agenda-custom-commands
       '(;; ---------------------------------------------------------
         ;; JOB "J"
@@ -81,6 +67,7 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
                    (org-agenda-start-day "0d")
                    (org-deadline-warning-days 0)
                    (org-agenda-skip-deadline-prewarning-if-scheduled t)
+                   (org-habit-show-habits nil)
                    (org-agenda-prefix-format " %i %-25:c%?-12t% s")))
           (alltodo ""
                    ((org-agenda-skip-function (lambda ()
@@ -98,16 +85,12 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
 
         ("ph" "habits"
          ((agenda ""
-                  ((org-agenda-span 5)
+                  ((org-agenda-span 3)
                    (org-agenda-start-day "0d")
                    (org-habit-show-habits t)
                    (org-agenda-show-log nil)
-                   (org-habit-following-days 5)
-                   (org-habit-preceding-days 10)
                    (org-habit-show-habits-only-for-today nil)
-                   (org-habit-graph-column 20)
-                   (org-agenda-skip-function
-                    '(org-agenda-skip-entry-if 'notregexp ":STYLE:.*habit")))))
+                   (org-habit-graph-column 20))))
          ((org-agenda-files (list "~/mi-gemelo-digital/personal/habitos.org"))))))
 
 (defun my/pop-to-org-agenda (&optional split)
@@ -124,23 +107,12 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
 (after! calendar
   (setq calendar-week-start-day 1))
 
-(setq org-todo-keywords
-      '((sequence "TODO(t)" "|" "DONE(d!)" "CANC(c!)")))
-
 ;; log into LOGBOOK drawer
 (setq org-log-into-drawer t)
 
-(after! org-habit
-  :after org
-  :config
-  (setq org-habit-show-habits t
-        org-habit-following-days 5
-        org-habit-preceding-days 10
-        org-habit-show-habits-only-for-today nil
-        org-habit-graph-column 20))
-
 (after! org
   (setq org-start-on-weekday 1)
+  (add-to-list 'org-modules 'org-habit)
   (setq org-capture-templates
         '(;; --- Grupo de TRABAJO (tecla "w") ---
           ("j" "job")
@@ -165,8 +137,6 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
 (map! :leader
       :desc "capture something"           "x" #'org-capture
       :desc "pop up a persistent scratch buffer" "X" #'doom/open-scratch-buffer)
-
-(use-package! calfw-org)
 
 (map! :leader
       (:prefix-map ("o" . "open")
