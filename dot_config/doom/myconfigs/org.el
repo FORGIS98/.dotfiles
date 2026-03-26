@@ -56,7 +56,7 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
                    (org-agenda-start-day "0d")
                    (org-agenda-prefix-format " %i %-25:c%?-12t% s")))
           (alltodo ""
-                   ((org-agenda-skip-if nil '(scheduled deadline))
+                   ((org-agenda-skip-function (lambda () (or (org-agenda-skip-if nil '(scheduled deadline)))))
                     (org-agenda-overriding-header "TODO-LIST:")
                     (org-agenda-prefix-format " %i %-25:c"))))
          ((org-agenda-files (append
