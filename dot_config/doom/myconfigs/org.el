@@ -130,7 +130,7 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
            (file "personal/todo.org")
            "* TODO %?\n"
            :prepend t)
-          ("pj" "diary" entry
+          ("pj" "journal" entry
            (file+datetree "personal/journal.org")
            "* %?"))))
 

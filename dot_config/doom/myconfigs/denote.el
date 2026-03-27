@@ -30,8 +30,8 @@
   :config
     (setq denote-silo-directories
           (list denote-directory
-                "~/mi-gemelo-digital/personal/"
-                "~/mi-gemelo-digital/job/"))
+                "~/mi-gemelo-digital/personal/denote"
+                "~/mi-gemelo-digital/job/denote"))
   (map! :leader
         :prefix ("d" . "denote")
         (:prefix ("s" . "silo")
