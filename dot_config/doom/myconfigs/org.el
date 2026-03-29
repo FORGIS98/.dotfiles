@@ -81,17 +81,7 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
                              (list "~/mi-gemelo-digital/cumpleaños.org"
                                    "~/mi-gemelo-digital/eventos-importantes.org")))
           (org-agenda-compact-blocks nil)
-          (org-agenda-block-separator #x2500)))
-
-        ("ph" "habits"
-         ((agenda ""
-                  ((org-agenda-span 3)
-                   (org-agenda-start-day "0d")
-                   (org-habit-show-habits t)
-                   (org-agenda-show-log nil)
-                   (org-habit-show-habits-only-for-today nil)
-                   (org-habit-graph-column 20))))
-         ((org-agenda-files (list "~/mi-gemelo-digital/personal/habitos.org"))))))
+          (org-agenda-block-separator #x2500)))))
 
 (defun my/pop-to-org-agenda (&optional split)
   "Visit the org agenda, in the current window or a SPLIT."
@@ -112,7 +102,6 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
 
 (after! org
   (setq org-start-on-weekday 1)
-  (add-to-list 'org-modules 'org-habit)
   (setq org-capture-templates
         '(;; --- Grupo de TRABAJO (tecla "w") ---
           ("j" "job")
@@ -130,7 +119,7 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
            (file "personal/todo.org")
            "* TODO %?\n"
            :prepend t)
-          ("pj" "diary" entry
+          ("pj" "journal" entry
            (file+datetree "personal/journal.org")
            "* %?"))))
 

@@ -58,3 +58,4 @@
 (package! denote-silo)
 (package! calfw-org)
 (package! org-timeblock)
+(package! org-modern)
