@@ -136,3 +136,19 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
   :config
   (setq org-timeblock-span 1)
   (setq org-timeblock-scale-options '(6 . 24)))
+
+(after! tmr
+  :config
+  (setq tmr-dateline-file (concat doom-cache-dir "tmr-dateline"))
+
+  (setq tmr-notification-functions
+        '(tmr-notification-notify
+          tmr-notification-notify-send
+          tmr-notification-play-audio)))
+
+(map! :leader
+        (:prefix "t"
+         :desc "Set timer"         "t" #'tmr-with-details
+         :desc "List timers"       "l" #'tmr-tabulated-view
+         :desc "Cancel timer"      "c" #'tmr-cancel
+         :desc "Clone timer"       "m" #'tmr-clone))
