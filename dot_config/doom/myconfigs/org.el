@@ -48,7 +48,7 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
          ((org-agenda-files (append
                              (directory-files-recursively "~/mi-gemelo-digital/job/" "\\.org$")
                              (list "~/mi-gemelo-digital/cumpleaños.org"
-                                   "~/mi-gemelo-digital/eventos-importantes.org")))
+                                   "~/mi-gemelo-digital/calendario-eventos.org")))
           (org-agenda-compact-blocks nil)
           (org-agenda-block-separator #x2500)))
 
@@ -79,7 +79,7 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
          ((org-agenda-files (append
                              (directory-files-recursively "~/mi-gemelo-digital/personal/" "\\.org$")
                              (list "~/mi-gemelo-digital/cumpleaños.org"
-                                   "~/mi-gemelo-digital/eventos-importantes.org")))
+                                   "~/mi-gemelo-digital/calendario-eventos.org")))
           (org-agenda-compact-blocks nil)
           (org-agenda-block-separator #x2500)))))
 
