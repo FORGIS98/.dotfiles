@@ -152,3 +152,5 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
          :desc "List timers"       "l" #'tmr-tabulated-view
          :desc "Cancel timer"      "c" #'tmr-cancel
          :desc "Clone timer"       "m" #'tmr-clone))
+
+(setq org-enforce-todo-dependencies t)
