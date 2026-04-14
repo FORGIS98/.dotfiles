@@ -24,6 +24,7 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
         subtree-end
       nil)))
 
+(setq org-agenda-sort-notime-is-late nil)
 (setq org-agenda-custom-commands
       '(;; ---------------------------------------------------------
         ;; JOB "J"

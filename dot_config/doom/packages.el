@@ -60,3 +60,4 @@
 (package! org-timeblock)
 (package! org-modern)
 (package! tmr)
+(package! csv-mode)
