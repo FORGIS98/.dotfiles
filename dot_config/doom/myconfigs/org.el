@@ -120,9 +120,14 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
            (file "personal/todo.org")
            "* TODO %?\n"
            :prepend t)
+          ("pd" "distracciones" item
+           (file "personal/cosas-que-me-distraen.org")
+           "- [ ] %?\n"
+           :prepend t)
           ("pj" "journal" entry
            (file+datetree "personal/journal.org")
-           "* %?"))))
+           "* %?"
+           :unnarrowed t))))
 
 (map! :leader
       :desc "capture something"           "x" #'org-capture
