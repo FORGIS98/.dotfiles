@@ -113,6 +113,10 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
           ("jm" "meeting" entry
            (file "job/meetings.org")
            "* REU %?")
+          ("jj" "journal" entry
+           (file+datetree "job/journal.org")
+           "* %?"
+           :unnarrowed t)
 
           ;; --- Grupo PERSONAL (tecla "p") ---
           ("p" "personal")
