@@ -48,7 +48,8 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
                              (list "~/mi-gemelo-digital/cumpleaños.org"
                                    "~/mi-gemelo-digital/calendario-eventos.org")))
           (org-agenda-compact-blocks nil)
-          (org-agenda-block-separator #x2500)))
+          (org-agenda-block-separator #x2500)
+          (setq org-agenda-start-with-log-mode t)))
 
         ;; ---------------------------------------------------------
         ;; PERSONAL "P"
@@ -76,7 +77,8 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
                              (list "~/mi-gemelo-digital/cumpleaños.org"
                                    "~/mi-gemelo-digital/calendario-eventos.org")))
           (org-agenda-compact-blocks nil)
-          (org-agenda-block-separator #x2500)))))
+          (org-agenda-block-separator #x2500)
+          (setq org-agenda-start-with-log-mode t)))))
 
 (defun my/pop-to-org-agenda (&optional split)
   "Visit the org agenda, in the current window or a SPLIT."
@@ -152,9 +154,8 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
 
 (map! :leader
         (:prefix "t"
-         :desc "Set timer"         "t" #'tmr-with-details
-         :desc "List timers"       "l" #'tmr-tabulated-view
-         :desc "Cancel timer"      "c" #'tmr-cancel
-         :desc "Clone timer"       "m" #'tmr-clone))
+         :desc "start"         "t" #'tmr-with-details
+         :desc "list"       "l" #'tmr-tabulated-view
+         :desc "remove"      "c" #'tmr-remove))
 
 (setq org-enforce-todo-dependencies t)
