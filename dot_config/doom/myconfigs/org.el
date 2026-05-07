@@ -33,10 +33,7 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
         ("j" . "job")
 
         ("jd" "daily view"
-         ((tags "PRIORITY=\"A\""
-                ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
-                 (org-agenda-overriding-header "High Priority! DO-NOW:")))
-          (agenda ""
+         ((agenda ""
                   ((org-agenda-span 3)
                    (org-deadline-warning-days 0)
                    (org-agenda-skip-deadline-prewarning-if-scheduled t)
@@ -60,10 +57,7 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
         ("p" . "personal")
 
         ("pd" "daily view"
-         ((tags "PRIORITY=\"A\""
-                ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
-                 (org-agenda-overriding-header "High Priority! DO-NOW:")))
-          (agenda ""
+         ((agenda ""
                   ((org-agenda-span 3)
                    (org-agenda-start-day "0d")
                    (org-deadline-warning-days 0)
