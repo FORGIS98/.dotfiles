@@ -49,7 +49,7 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
                                    "~/mi-gemelo-digital/calendario-eventos.org")))
           (org-agenda-compact-blocks nil)
           (org-agenda-block-separator #x2500)
-          (setq org-agenda-start-with-log-mode t)))
+          (org-agenda-start-with-log-mode t)))
 
         ;; ---------------------------------------------------------
         ;; PERSONAL "P"
@@ -78,7 +78,7 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
                                    "~/mi-gemelo-digital/calendario-eventos.org")))
           (org-agenda-compact-blocks nil)
           (org-agenda-block-separator #x2500)
-          (setq org-agenda-start-with-log-mode t)))))
+          (org-agenda-start-with-log-mode t)))))
 
 (defun my/pop-to-org-agenda (&optional split)
   "Visit the org agenda, in the current window or a SPLIT."
