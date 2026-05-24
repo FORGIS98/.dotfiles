@@ -136,11 +136,11 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
 (map! :leader
       (:prefix-map ("o" . "open")
                    (:prefix-map ("c" . "calendar")
-                    :desc "today"                      "t" #'org-timeblock)))
+                    :desc "timeblock"                      "t" #'org-timeblock)))
 
 (after! org-timeblock
   :config
-  (setq org-timeblock-span 1)
+  (setq org-timeblock-span 3)
   (setq org-timeblock-scale-options '(6 . 24)))
 
 (after! tmr
