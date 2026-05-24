@@ -1,0 +1,8 @@
+source $HOME/.config/zsh/init.sh
+
+FILES_STR=$(find .config/zsh -name '*.sh' -not -name 'init.sh')
+FILES=($(echo $FILES_STR | tr '\n' ' '))
+
+for FILE in $FILES; do
+    source $FILE
+done
