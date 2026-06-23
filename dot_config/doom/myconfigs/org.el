@@ -24,7 +24,12 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
         subtree-end
       nil)))
 
-(setq org-agenda-sort-notime-is-late nil)
+(defun my/org-agenda-skip-if-no-agenda ()
+  "Devuelve el fin del subárbol si tiene la propiedad :NO_AGENDA: t."
+  (let ((subtree-end (save-excursion (org-end-of-subtree t))))
+    (when (string= "t" (org-entry-get nil "NO_AGENDA"))
+      subtree-end)))
+
 (setq org-agenda-custom-commands
       '(;; ---------------------------------------------------------
         ;; JOB "J"
@@ -38,9 +43,15 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
                    (org-deadline-warning-days 0)
                    (org-agenda-skip-deadline-prewarning-if-scheduled t)
                    (org-agenda-start-day "0d")
-                   (org-agenda-prefix-format " %i %-25:c%?-12t% s")))
+                   (org-agenda-prefix-format " %i %-25:c%?-12t% s")
+                   ;; Añadido para filtrar la vista de agenda diaria:
+                   (org-agenda-skip-function 'my/org-agenda-skip-if-no-agenda)))
           (alltodo ""
-                   ((org-agenda-skip-function (lambda () (or (org-agenda-skip-if nil '(scheduled deadline)))))
+                   ((org-agenda-skip-function
+                     (lambda ()
+                       ;; Evaluamos primero si tiene :NO_AGENDA:, si no, evaluamos el resto
+                       (or (my/org-agenda-skip-if-no-agenda)
+                           (org-agenda-skip-if nil '(scheduled deadline)))))
                     (org-agenda-overriding-header "TODO-LIST:")
                     (org-agenda-prefix-format " %i %-25:c"))))
          ((org-agenda-files (append
@@ -64,12 +75,17 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
                    (org-deadline-warning-days 0)
                    (org-agenda-skip-deadline-prewarning-if-scheduled t)
                    (org-habit-show-habits nil)
-                   (org-agenda-prefix-format " %i %-25:c%?-12t% s")))
+                   (org-agenda-prefix-format " %i %-25:c%?-12t% s")
+                   ;; Añadido para filtrar la vista de agenda diaria:
+                   (org-agenda-skip-function 'my/org-agenda-skip-if-no-agenda)))
           (alltodo ""
-                   ((org-agenda-skip-function (lambda ()
-                                                (or (my/org-skip-subtree-if-habit)
-                                                    (my/org-skip-subtree-if-priority ?A)
-                                                    (org-agenda-skip-if nil '(scheduled deadline)))))
+                   ((org-agenda-skip-function
+                     (lambda ()
+                       ;; Encadenamos en el 'or' para que salte si se cumple cualquiera
+                       (or (my/org-agenda-skip-if-no-agenda)
+                           (my/org-skip-subtree-if-habit)
+                           (my/org-skip-subtree-if-priority ?A)
+                           (org-agenda-skip-if nil '(scheduled deadline)))))
                     (org-agenda-overriding-header "TODO-LIST:")
                     (org-agenda-prefix-format " %i %-25:c"))))
          ((org-agenda-files (append
@@ -79,6 +95,8 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
           (org-agenda-compact-blocks nil)
           (org-agenda-block-separator #x2500)
           (org-agenda-start-with-log-mode t)))))
+
+(setq org-agenda-sort-notime-is-late nil)
 
 (defun my/pop-to-org-agenda (&optional split)
   "Visit the org agenda, in the current window or a SPLIT."
@@ -98,6 +116,13 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
 (setq org-log-into-drawer t)
 
 (after! org
+  (after! org
+    (setq org-clock-clocktable-default-properties
+          '(:scope file
+            :maxlevel 3
+            :block thisweek
+            :step day
+            :compact t)))
   (setq org-start-on-weekday 1)
   (setq org-capture-templates
         '(;; --- Grupo de TRABAJO (tecla "w") ---
@@ -153,9 +178,9 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
           tmr-notification-play-audio)))
 
 (map! :leader
-        (:prefix "t"
-         :desc "start"         "t" #'tmr-with-details
-         :desc "list"       "l" #'tmr-tabulated-view
-         :desc "remove"      "c" #'tmr-remove))
+      (:prefix "t"
+       :desc "start"         "t" #'tmr-with-details
+       :desc "list"       "l" #'tmr-tabulated-view
+       :desc "remove"      "c" #'tmr-remove))
 
 (setq org-enforce-todo-dependencies t)
