@@ -168,19 +168,34 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
   (setq org-timeblock-span 3)
   (setq org-timeblock-scale-options '(6 . 24)))
 
-(after! tmr
-  :config
-  (setq tmr-dateline-file (concat doom-cache-dir "tmr-dateline"))
-
-  (setq tmr-notification-functions
-        '(tmr-notification-notify
-          tmr-notification-notify-send
-          tmr-notification-play-audio)))
-
 (map! :leader
       (:prefix "t"
-       :desc "start"         "t" #'tmr-with-details
-       :desc "list"       "l" #'tmr-tabulated-view
-       :desc "remove"      "c" #'tmr-remove))
+       :desc "start tmr"                "t" #'tmr-with-details
+       :desc "list"                     "l" #'tmr-tabulated-view
+       :desc "pomodoro with clock-in"   "s" #'my/org-clock-in-with-tmr
+       :desc "remove"                   "c" #'tmr-remove))
 
 (setq org-enforce-todo-dependencies t)
+
+(after! tmr
+  (setq tmr-dateline-file (concat doom-cache-dir "tmr-dateline"))
+
+  (defun my/org-clock-out-on-tmr-ack (&rest _)
+    "Clock out de Org despues de reconocer un TMR."
+    (when (org-clock-is-active)
+      (org-clock-out nil t)
+      (message "TMR ACK: clock-out realizado.")))
+
+  ;; El ACK de TMR debe ejecutarse antes que nuestro clock-out.
+  (add-hook 'tmr-timer-finished-functions
+            #'my/org-clock-out-on-tmr-ack
+            t))
+
+(defun my/org-clock-in-with-tmr (duration description)
+  "Inicia Org clock y un TMR con ACK."
+  (interactive "sDuracion TMR (ej. 25m): \nsDescripcion: ")
+  (org-clock-in)
+  (let ((desc (if (string-empty-p description)
+                  (org-get-heading t t t t)
+                description)))
+    (tmr duration desc t)))
