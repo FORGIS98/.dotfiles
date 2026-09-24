@@ -191,11 +191,20 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
             #'my/org-clock-out-on-tmr-ack
             t))
 
+;; (defun my/org-clock-in-with-tmr (duration description)
+;;   "Inicia Org clock y un TMR con ACK."
+;;   (interactive "sDuracion TMR (ej. 25m): \nsDescripcion: ")
+;;   (org-clock-in)
+;;   (let ((desc (if (string-empty-p description)
+;;                   (org-get-heading t t t t)
+;;                 description)))
+;;     (tmr duration desc t)))
+
 (defun my/org-clock-in-with-tmr (duration description)
-  "Inicia Org clock y un TMR con ACK."
-  (interactive "sDuracion TMR (ej. 25m): \nsDescripcion: ")
+  "Inicia Org clock y un TMR con ACK. Utiliza 25m por defecto."
+  (interactive
+   (let ((default-heading (org-get-heading t t t t)))
+     (list (read-string "Duración TMR (ej. 25m) [defecto: 25]: " nil nil "25")
+           (read-string (format "Descripción [defecto: %s]: " default-heading) nil nil default-heading))))
   (org-clock-in)
-  (let ((desc (if (string-empty-p description)
-                  (org-get-heading t t t t)
-                description)))
-    (tmr duration desc t)))
+  (tmr duration description t))
